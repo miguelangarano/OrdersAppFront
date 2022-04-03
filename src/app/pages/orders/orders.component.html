@@ -1,0 +1,198 @@
+<div class="page-container">
+    <app-menu-bar></app-menu-bar>
+    <div class="header-container">
+        <h1>Ordenes</h1>
+        <app-add-button [text]="'Agregar Orden'" (click)="manageCreateModal()"></app-add-button>
+    </div>
+    <div class="table-container">
+        <div class="table-row">
+            <div class="table-column">
+                <div class="table-cell">
+                    <strong>ID</strong>
+                </div>
+            </div>
+            <div class="table-column">
+                <div class="table-cell">
+                    <strong>Cliente</strong>
+                </div>
+            </div>
+            <div class="table-column">
+                <div class="table-cell">
+                    <strong>Total</strong>
+                </div>
+            </div>
+            <div class="table-column">
+                <div class="table-cell">
+                    <strong>Fecha</strong>
+                </div>
+            </div>
+            <div class="table-column">
+                <div class="table-cell">
+                    
+                </div>
+            </div>
+        </div>
+        <div *ngFor="let order of orders" class="table-row">
+            <div class="table-column">
+                <div class="table-cell">
+                    {{order.id}}
+                </div>
+            </div>
+            <div class="table-column">
+                <div class="table-cell">
+                    {{order.clientName}}
+                </div>
+            </div>
+            <div class="table-column">
+                <div class="table-cell">
+                    ${{order.total}}
+                </div>
+            </div>
+            <div class="table-column">
+                <div class="table-cell">
+                    {{getDate(order.date)}}
+                </div>
+            </div>
+            <div class="table-column">
+                <div class="table-cell">
+                    <div class="actions-container">
+                        <img (click)="manageModal(order)" class="actions-icon" src="assets/edit.svg"/>
+                        <img (click)="manageDeleteModal(order)" class="actions-icon" src="assets/delete.svg"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal" [class]="modalCreateStatus?'modal':'modal-none'">
+        <div class="modal-content">
+            <h1>Crear Orden</h1>
+            <br/>
+            <app-action-button [type]="'accept'" [text]="'Seleccionar Cliente'" (onClick)="manageClientModal()"></app-action-button>
+            <br/>
+            <span>Cliente: {{currentClient?currentClient.fullname:"Seleccione un cliente"}}</span>
+            <br/>
+            <br/>
+            <app-action-button [type]="'accept'" [text]="'Seleccionar Productos'" (onClick)="manageProductsModal()"></app-action-button>
+            <br/>
+            <h3>Productos</h3>
+            <br/>
+            <div class="product-row" *ngFor="let currentProduct of currentProducts">{{currentProduct.name}} - ${{currentProduct.price}} <img (click)="onProductRemove(currentProduct)" class="actions-icon" src="assets/delete.svg"/></div>
+            <br/>
+            <br/>
+            <h3>Total: ${{calculateTotal(currentProducts)}}</h3>
+            <br/>
+            <br/>
+            <div class="options-container">
+                <app-action-button [type]="'accept'" [text]="'Aceptar'" (onClick)="onCreateAccept()"></app-action-button>
+                <app-action-button [type]="'cancel'" [text]="'Cancelar'" (onClick)="onCreateCancel()"></app-action-button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal" [class]="modalStatus?'modal':'modal-none'">
+        <div class="modal-content">
+            <h1>Actualizar Orden</h1>
+            <br/>
+            <app-input [label]="'ID'" [type]="'text'" [disabled]="true" [currentValue]="currentOrder?.id"></app-input>
+            <app-action-button [type]="'accept'" [text]="'Seleccionar Cliente'" (onClick)="manageClientModal()"></app-action-button>
+            <br/>
+            <span>Cliente: {{currentClient?currentClient.fullname:"Seleccione un cliente"}}</span>
+            <br/>
+            <br/>
+            <app-action-button [type]="'accept'" [text]="'Seleccionar Productos'" (onClick)="manageProductsModal()"></app-action-button>
+            <br/>
+            <h3>Productos</h3>
+            <br/>
+            <div class="product-row" *ngFor="let currentProduct of currentProducts">{{currentProduct.name}} - ${{currentProduct.price}} <img (click)="onProductRemove(currentProduct)" class="actions-icon" src="assets/delete.svg"/></div>
+            <br/>
+            <br/>
+            <h3>Total: ${{calculateTotal(currentProducts)}}</h3>
+            <br/>
+            <br/>
+            <div class="options-container">
+                <app-action-button [type]="'accept'" [text]="'Aceptar'" (onClick)="onEditAccept()"></app-action-button>
+                <app-action-button [type]="'cancel'" [text]="'Cancelar'" (onClick)="onEditCancel()"></app-action-button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal" [class]="modalDeleteStatus?'modal':'modal-none'">
+        <div class="modal-content">
+            <h1>Eliminar Orden?</h1>
+            <h3>del cliente {{currentOrder?.clientName}}</h3>
+            <div class="options-container">
+                <app-action-button [type]="'accept'" [text]="'Aceptar'" (onClick)="onDeleteAccept()"></app-action-button>
+                <app-action-button [type]="'cancel'" [text]="'Cancelar'" (onClick)="onDeleteCancel()"></app-action-button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal" [class]="modalClientStatus?'modal-table':'modal-none'">
+        <div class="modal-content-table">
+            <div class="table-container">
+                <div class="table-row">
+                    <div class="table-column">
+                        <div class="table-cell">
+                            Nombre
+                        </div>
+                    </div>
+                    <div class="table-column">
+                        <div class="table-cell">
+                            Telefono
+                        </div>
+                    </div>
+                </div>
+                <div *ngFor="let client of clients" [class]="currentClient==null?'table-row':'table-row-selected'" (click)="onClientSelect(client)">
+                    <div class="table-column">
+                        <div class="table-cell">
+                            {{client.fullname}}
+                        </div>
+                    </div>
+                    <div class="table-column">
+                        <div class="table-cell">
+                            {{client.phone}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="options-container">
+                <app-action-button [type]="'cancel'" [text]="'Cerrar'" (onClick)="onClientClose()"></app-action-button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal" [class]="modalProductsStatus?'modal-table':'modal-none'">
+        <div class="modal-content-table">
+            <div class="table-container">
+                <div class="table-row">
+                    <div class="table-column">
+                        <div class="table-cell">
+                            Nombre
+                        </div>
+                    </div>
+                    <div class="table-column">
+                        <div class="table-cell">
+                            Precio
+                        </div>
+                    </div>
+                </div>
+                <div *ngFor="let product of products" [class]="!itemExists(currentProducts, product.id)?'table-row':'table-row-selected'" (click)="onProductSelect(product)">
+                    <div class="table-column">
+                        <div class="table-cell">
+                            {{product.name}}
+                        </div>
+                    </div>
+                    <div class="table-column">
+                        <div class="table-cell">
+                            ${{product.price}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="options-container">
+                <app-action-button [type]="'cancel'" [text]="'Cerrar'" (onClick)="onProductsClose()"></app-action-button>
+            </div>
+        </div>
+    </div>
+</div>

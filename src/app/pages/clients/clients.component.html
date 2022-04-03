@@ -1,0 +1,94 @@
+<div class="page-container">
+    <app-menu-bar></app-menu-bar>
+    <div class="header-container">
+        <h1>Clientes</h1>
+        <app-add-button [text]="'Agregar Cliente'" (click)="manageCreateModal()"></app-add-button>
+    </div>
+    <div class="table-container">
+        <div class="table-row">
+            <div class="table-column">
+                <div class="table-cell">
+                    <strong>ID</strong>
+                </div>
+            </div>
+            <div class="table-column">
+                <div class="table-cell">
+                    <strong>Nombre</strong>
+                </div>
+            </div>
+            <div class="table-column">
+                <div class="table-cell">
+                    <strong>Telefono</strong>
+                </div>
+            </div>
+            <div class="table-column">
+                <div class="table-cell">
+                    
+                </div>
+            </div>
+        </div>
+        <div *ngFor="let client of clients" class="table-row">
+            <div class="table-column">
+                <div class="table-cell">
+                    {{client.id}}
+                </div>
+            </div>
+            <div class="table-column">
+                <div class="table-cell">
+                    {{client.fullname}}
+                </div>
+            </div>
+            <div class="table-column">
+                <div class="table-cell">
+                    {{client.phone}}
+                </div>
+            </div>
+            <div class="table-column">
+                <div class="table-cell">
+                    <div class="actions-container">
+                        <img (click)="manageModal(client)" class="actions-icon" src="assets/edit.svg"/>
+                        <img (click)="manageDeleteModal(client)" class="actions-icon" src="assets/delete.svg"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal" [class]="modalCreateStatus?'modal':'modal-none'">
+        <div class="modal-content">
+            <h1>Crear Cliente</h1>
+            <br/>
+            <app-input [label]="'Nombre y Apellido'" [type]="'text'" (onInputChange)="onInputsChange($event)" [currentValue]="currentClient?.fullname"></app-input>
+            <app-input [label]="'Telefono'" [type]="'text'" (onInputChange)="onInputsChange($event)" [currentValue]="currentClient?.phone"></app-input>
+            <div class="options-container">
+                <app-action-button [type]="'accept'" [text]="'Aceptar'" (onClick)="onCreateAccept()"></app-action-button>
+                <app-action-button [type]="'cancel'" [text]="'Cancelar'" (onClick)="onCreateCancel()"></app-action-button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal" [class]="modalStatus?'modal':'modal-none'">
+        <div class="modal-content">
+            <h1>Actualizar Cliente</h1>
+            <br/>
+            <app-input [label]="'ID'" [type]="'text'" [disabled]="true" [currentValue]="currentClient?.id"></app-input>
+            <app-input [label]="'Nombre y Apellido'" [type]="'text'" (onInputChange)="onInputsChange($event)" [currentValue]="currentClient?.fullname"></app-input>
+            <app-input [label]="'Telefono'" [type]="'text'" (onInputChange)="onInputsChange($event)" [currentValue]="currentClient?.phone"></app-input>
+            <div class="options-container">
+                <app-action-button [type]="'accept'" [text]="'Aceptar'" (onClick)="onEditAccept()"></app-action-button>
+                <app-action-button [type]="'cancel'" [text]="'Cancelar'" (onClick)="onEditCancel()"></app-action-button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal" [class]="modalDeleteStatus?'modal':'modal-none'">
+        <div class="modal-content">
+            <h1>Eliminar Cliente?</h1>
+            <h3>{{currentClient?.fullname}}</h3>
+            <div class="options-container">
+                <app-action-button [type]="'accept'" [text]="'Aceptar'" (onClick)="onDeleteAccept()"></app-action-button>
+                <app-action-button [type]="'cancel'" [text]="'Cancelar'" (onClick)="onDeleteCancel()"></app-action-button>
+            </div>
+        </div>
+    </div>
+</div>

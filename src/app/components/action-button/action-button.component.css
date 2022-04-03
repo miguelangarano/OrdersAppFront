@@ -1,0 +1,20 @@
+div{
+    cursor: pointer;
+    user-select: none;
+    height: 40px;
+    margin: 0 15px;
+    width: fit-content;
+    padding: 0 15px;
+    border-radius: 5px;
+    color: white;
+    display: flex;
+    align-items: center;
+}
+
+.accept{
+    background: green;
+}
+
+.cancel{
+    background: red;
+}

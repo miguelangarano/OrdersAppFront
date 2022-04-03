@@ -1,0 +1,11 @@
+div{
+    display: flex;
+    width: 100%;
+    background: #fffefe;
+    height: 8%;
+    align-items: center;
+    padding-left: 10px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #e5e7ee;
+    gap: 5px;
+}

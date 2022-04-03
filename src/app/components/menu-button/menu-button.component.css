@@ -1,0 +1,19 @@
+div{
+    padding: 5px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px transparent;
+    width: fit-content;
+    height: 20px;
+    cursor: pointer;
+    color: #5c5e67;
+    user-select: none;
+}
+
+div:hover{
+    border: 1px solid #cdd7e8;
+    background: #f5f8ff;
+    color: #103c82;
+    border-radius: 5px;
+}
